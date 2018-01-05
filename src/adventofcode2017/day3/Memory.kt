@@ -12,7 +12,7 @@ class Memory(
         private fun getSquareNumber(position: Int): Int {
             var squareSize = 1
             var squareNumber = 0
-            while (position >= squareSize * squareSize) {
+            while (position >= squareSize.square()) {
                 squareSize += 2
                 squareNumber += 1
             }
@@ -20,13 +20,16 @@ class Memory(
         }
 
         private fun getSquareSize(squareNumber: Int): Int {
-            val squareSize = squareNumber * 2 + 1
-            return squareSize * squareSize
+            return squareNumber * 2 + 1
         }
 
         fun getPositionInSquare(position: Int): Pair<Int, Int> {
             val squareNumber = getSquareNumber(position)
-            val positionInSquare = if (squareNumber > 0) position - getSquareSize(squareNumber - 1) else 0
+            val positionInSquare = if (squareNumber > 0) {
+                position - getSquareSize(squareNumber - 1).square()
+            } else {
+                0
+            }
             return Pair(squareNumber, positionInSquare)
         }
     }
@@ -43,8 +46,8 @@ class Memory(
 
         if (position > 0) {
             val (squareNumber, positionInSquare) = Utils.getPositionInSquare(position)
-            val squareSize = Math.sqrt(Utils.getSquareSize(squareNumber).toDouble()).toInt()
-            val numbersInSquare = Utils.getSquareSize(squareNumber) - Utils.getSquareSize(squareNumber - 1)
+            val squareSize = Utils.getSquareSize(squareNumber)
+            val numbersInSquare = squareSize.square() - Utils.getSquareSize(squareNumber - 1).square()
             val side = positionInSquare / (numbersInSquare / 4)
             val positionInSide = positionInSquare % (numbersInSquare / 4)
 
@@ -107,3 +110,5 @@ class Memory(
         return Math.abs(x - startX) + Math.abs(y - startY) - 1
     }
 }
+
+fun Int.square() = this * this
